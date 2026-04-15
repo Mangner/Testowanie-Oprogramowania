@@ -1,0 +1,33 @@
+venv/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Robot Framework output
+*/output.xml
+*/log.html
+*/report.html
+*.html
+*.xml
+*.log
+output.xml
+report.html
+log.html
+
+# Katalog z wynikami
+results/
+
+__pycache__/
+*.pyc
+
+venv/
+ENV/
+env/
+pip-selfcheck.json
+
+epc-simulator.tar
+.venv/
+Evolved Packet Core - dokumentacja 2.pdf
