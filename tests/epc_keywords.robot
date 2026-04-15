@@ -1,11 +1,39 @@
-Settings 
+*** Settings ***
 Library    Collections
 Library    ../libraries/EpcLibrary.py
 
- Keywords 
+*** Keywords ***
 Reset EPC Network Simulator
     [Documentation]    Restores the simulator to its initial state.
     Api Reset Simulator
+
+Attach UE
+    [Arguments]    ${ue_id}
+    [Documentation]    Attaches the UE and checks for errors.
+    Api Attach Ue    ${ue_id}
+
+Detach UE
+    [Arguments]    ${ue_id}
+    [Documentation]    Detaches the UE from the network.
+    Api Detach Ue    ${ue_id}
+
+Verify UE Is Not Attached
+    [Arguments]    ${ue_id}
+    [Documentation]    Verifies that a UE is not attached to the network.
+    ${status}    ${error_message}=    Run Keyword And Ignore Error    Api Get Ue Details    ${ue_id}
+    Should Be Equal As Strings    ${status}    FAIL
+    Should Contain    ${error_message}    400
+
+Add Bearer To UE
+    [Arguments]    ${ue_id}    ${bearer_id}
+    [Documentation]    Adds a dedicated bearer to a UE.
+    Api Add Bearer To Ue    ${ue_id}    ${bearer_id}
+
+Verify Bearer Is Active
+    [Arguments]    ${ue_id}    ${bearer_id}
+    [Documentation]    Verifies that a specific bearer is active for a UE.
+    ${active_bearers}=    Api Get Ue Bearers    ${ue_id}
+    List Should Contain Value    ${active_bearers}    ${bearer_id}
 
 Device Should Have Default Transport Channel
     [Arguments]    ${ue_id}
