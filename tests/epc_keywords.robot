@@ -22,7 +22,7 @@ Verify UE Is Not Attached
     [Documentation]    Verifies that a UE is not attached to the network.
     ${status}    ${error_message}=    Run Keyword And Ignore Error    Api Fetch All Details For User Equipment    ${ue_id}
     Should Be Equal As Strings    ${status}    FAIL
-    Should Contain    ${error_message}    404   
+    Should Contain    ${error_message}    400   
 
 Add Bearer To UE
     [Arguments]    ${ue_id}    ${bearer_id}
