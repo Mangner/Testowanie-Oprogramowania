@@ -33,11 +33,13 @@ Verify Bearer Is Active
     [Arguments]    ${ue_id}    ${bearer_id}
     [Documentation]    Verifies that a specific bearer is active for a UE.
     ${active_bearers}=    Api Extract Active Bearers List For Ue    ${ue_id}
-    List Should Contain Value    ${active_bearers}    ${bearer_id}
+    ${bearer_id_int}=    Convert To Integer    ${bearer_id}
+    List Should Contain Value    ${active_bearers}    ${bearer_id_int}
 
 Device Should Have Default Transport Channel
     [Arguments]    ${ue_id}
     [Documentation]    Retrieves the list of bearers and verifies if the default bearer ID 9 is present.
     ${active_bearers}=    Api Extract Active Bearers List For Ue    ${ue_id}
-    List Should Contain Value    ${active_bearers}    9
+    ${default_bearer_int}=    Convert To Integer    9
+    List Should Contain Value    ${active_bearers}    ${default_bearer_int}
     ...    msg=Error! Device ${ue_id} did not receive the default bearer with ID 9.
