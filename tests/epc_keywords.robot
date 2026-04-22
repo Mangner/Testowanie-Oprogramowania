@@ -77,3 +77,28 @@ End Transfer On UE-${ue_id} Bearer-${bearer_id}
 Verify No Transfer Is Active On UE-${ue_id} Bearer-${bearer_id}
     [Documentation]    Verifies that transfer has been stopped.
     Api Verify No Transfer Is Active    ${ue_id}    ${bearer_id}
+
+Get Aggregated Stats For UE-${ue_id} Include Details ${include_details}
+    [Documentation]    Retrieves aggregated throughput stats for a specific UE scope.
+    ${stats}=    Api Get Aggregated Stats    ue_id=${ue_id}    include_details=${include_details}
+    RETURN    ${stats}
+
+Verify Reported Throughput Is Within Configured Limit On UE-${ue_id} Bearer-${bearer_id} Max Ratio ${max_ratio}
+    [Documentation]    Verifies that measured tx/rx do not exceed target by more than allowed ratio.
+    ${traffic}=    Api Get Transfer Info    ${ue_id}    bearer_id=${bearer_id}
+    ${target_bps}=    Get From Dictionary    ${traffic}    target_bps
+    ${tx_bps}=    Get From Dictionary    ${traffic}    tx_bps
+    ${rx_bps}=    Get From Dictionary    ${traffic}    rx_bps
+    ${limit_bps}=    Evaluate    int(${target_bps} * ${max_ratio})
+    Should Be True    ${tx_bps} <= ${limit_bps}    msg=TX throughput ${tx_bps} exceeds allowed limit ${limit_bps} for target ${target_bps}
+    Should Be True    ${rx_bps} <= ${limit_bps}    msg=RX throughput ${rx_bps} exceeds allowed limit ${limit_bps} for target ${target_bps}
+
+Verify Aggregated Stats For UE-${ue_id} Show No Active Traffic
+    [Documentation]    Verifies that no active traffic is reported in /ues/stats for UE scope.
+    ${stats}=    Get Aggregated Stats For UE-${ue_id} Include Details ${False}
+    ${bearer_count}=    Get From Dictionary    ${stats}    bearer_count
+    ${total_tx_bps}=    Get From Dictionary    ${stats}    total_tx_bps
+    ${total_rx_bps}=    Get From Dictionary    ${stats}    total_rx_bps
+    Should Be Equal As Integers    ${total_tx_bps}    0    msg=Expected total_tx_bps=0 after stop, got ${total_tx_bps}
+    Should Be Equal As Integers    ${total_rx_bps}    0    msg=Expected total_rx_bps=0 after stop, got ${total_rx_bps}
+    Should Be Equal As Integers    ${bearer_count}    0    msg=Expected bearer_count=0 after stop, got ${bearer_count}

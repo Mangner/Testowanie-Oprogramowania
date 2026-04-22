@@ -5,6 +5,17 @@ class EpcLibrary:
     def __init__(self, base_url="http://localhost:8000"):
         self.base_url = base_url
 
+    def api_get_aggregated_stats(self, ue_id=None, include_details=False):
+        url = f"{self.base_url}/ues/stats"
+        params = {"include_details": include_details}
+        if ue_id is not None:
+            params["ue_id"] = int(ue_id)
+
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        logger.info(f"Fetched aggregated stats (ue_id={ue_id}, include_details={include_details}).")
+        return response.json()
+
     def api_send_request_to_attach_user_equipment(self, ue_id):
         url = f"{self.base_url}/ues"
         payload = {"ue_id": int(ue_id)}
