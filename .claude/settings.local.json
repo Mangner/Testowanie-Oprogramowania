@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"http://localhost:8000/ues/stats\")",
+      "Bash(curl -s -X POST http://localhost:8000/ues -H \"Content-Type: application/json\" -d '{\"ue_id\": 58}')",
+      "Bash(curl -s -X POST http://localhost:8000/ues/58/bearers/9/traffic -H \"Content-Type: application/json\" -d '{\"protocol\": \"tcp\", \"Mbps\": 10}')",
+      "Bash(curl -s \"http://localhost:8000/ues/stats?include_details=true\")",
+      "Bash(curl -s -X DELETE http://localhost:8000/ues/58)",
+      "Bash(curl -s -X POST http://localhost:8000/ues -H \"Content-Type: application/json\" -d '{\"ue_id\": 59}')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/ues/59/bearers/9/traffic)",
+      "Bash(curl -s http://localhost:8000/ues/59/bearers/9/traffic)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X DELETE http://localhost:8000/ues/59/bearers/9/traffic)",
+      "Bash(curl -s -X DELETE http://localhost:8000/ues/59)",
+      "Bash(curl -s -X POST http://localhost:8000/ues/59/bearers/9/traffic -H \"Content-Type: application/json\" -d '{\"protocol\": \"tcp\", \"Mbps\": 0, \"kbps\": 500, \"bps\": 0}')",
+      "Bash(curl -s -X DELETE http://localhost:8000/ues/59/bearers/9/traffic)",
+      "Bash(curl -s -X POST http://localhost:8000/ues/59/bearers/9/traffic -H \"Content-Type: application/json\" -d '{\"protocol\": \"tcp\", \"Mbps\": 0, \"kbps\": 0, \"bps\": 100000}')",
+      "Bash(curl -s -X POST http://localhost:8000/ues/59/bearers/9/traffic -H \"Content-Type: application/json\" -d '{\"protocol\": \"tcp\", \"kbps\": 500}')",
+      "Bash(curl -s -X POST http://localhost:8000/ues/59/bearers/9/traffic -H \"Content-Type: application/json\" -d '{\"protocol\": \"udp\", \"bps\": 100000}')"
+    ]
+  }
+}
