@@ -50,3 +50,13 @@ TC09 Verify Removing Inactive Bearer Throws Error
     [Setup]    Attach UE-7
     Run Keyword And Expect Error    *    Remove Bearer-4 From UE-7
     [Teardown]    Detach UE-7
+
+TC20 Verify Adding Bearer To Unattached UE Throws Error
+    [Tags]    bearer    negative
+    Run Keyword And Expect Error    *    Add Bearer-2 To UE-31
+
+TC21 Verify Adding Bearer Below Range Throws Error
+    [Tags]    bearer    negative
+    [Setup]    Attach UE-37
+    Run Keyword And Expect Error    *    Add Bearer-0 To UE-37
+    [Teardown]    Detach UE-37

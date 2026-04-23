@@ -56,6 +56,17 @@ Get Active Bearers For UE-${ue_id}
     ${active_bearers}=    Api Extract Active Bearers List For Ue    ${ue_id}
     RETURN    ${active_bearers}
 
+Get Attached UE List
+    [Documentation]    Returns IDs of currently attached UEs.
+    ${ue_list}=    Api List Attached Ues
+    RETURN    ${ue_list}
+
+Get UE Stats
+    [Documentation]    Returns aggregate stats for all UEs or a single UE.
+    [Arguments]    ${ue_id}=${None}    ${include_details}=${False}
+    ${stats}=    Api Get Ues Stats    ue_id=${ue_id}    include_details=${include_details}
+    RETURN    ${stats}
+
 Start DL Transfer On UE-${ue_id} Bearer-${bearer_id} Speed ${speed} Mbps
     [Documentation]    Starts DL data transfer for a specific bearer.
     Api Start Data Transfer    ${ue_id}    ${bearer_id}    ${speed}
@@ -77,3 +88,11 @@ End Transfer On UE-${ue_id} Bearer-${bearer_id}
 Verify No Transfer Is Active On UE-${ue_id} Bearer-${bearer_id}
     [Documentation]    Verifies that transfer has been stopped.
     Api Verify No Transfer Is Active    ${ue_id}    ${bearer_id}
+
+Verify Reported Throughput Is Within ${tolerance_percent} Percent Of Target On UE-${ue_id} Bearer-${bearer_id}
+    [Documentation]    Verifies that reported tx/rx throughput does not exceed configured target by too much.
+    ${transfer_info}=    Api Get Transfer Info    ${ue_id}    bearer_id=${bearer_id}
+    Should Be True    ${transfer_info}[target_bps] > 0
+    ${max_allowed_bps}=    Evaluate    int(${transfer_info}[target_bps] * (1 + ${tolerance_percent} / 100))
+    Should Be True    ${transfer_info}[tx_bps] <= ${max_allowed_bps}
+    Should Be True    ${transfer_info}[rx_bps] <= ${max_allowed_bps}

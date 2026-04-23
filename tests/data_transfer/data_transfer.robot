@@ -37,3 +37,16 @@ TC14 Verify Ending Specific Bearer Transfer
     End Transfer On UE-12 Bearer-9
     Verify No Transfer Is Active On UE-12 Bearer-9
     [Teardown]    Detach UE-12
+
+TC22 Verify Starting Transfer With Zero Speed Throws Error
+    [Tags]    transfer    negative
+    [Setup]    Attach UE-32
+    Run Keyword And Expect Error    *    Start DL Transfer On UE-32 Bearer-9 Speed 0 Mbps
+    [Teardown]    Detach UE-32
+
+TC23 Verify Reported Throughput Is Within Configured Limit
+    [Tags]    transfer    defect
+    [Setup]    Attach UE-33
+    Start DL Transfer On UE-33 Bearer-9 Speed 5 Mbps
+    Verify Reported Throughput Is Within 20 Percent Of Target On UE-33 Bearer-9
+    [Teardown]    Detach UE-33

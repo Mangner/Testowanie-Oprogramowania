@@ -18,3 +18,7 @@ TC18 Verify Attaching Already Attached UE Throws Error
     [Setup]    Attach UE-16
     Run Keyword And Expect Error    *    Attach UE-16
     [Teardown]    Detach UE-16
+
+TC19 Verify Attaching Below Range UE Throws Error
+    [Tags]    attach    negative
+    Run Keyword And Expect Error    *    Attach UE-0
