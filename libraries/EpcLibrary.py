@@ -6,10 +6,6 @@ class EpcLibrary:
     def __init__(self, base_url="http://localhost:8000"):
         self.base_url = base_url
 
-    # ========================
-    # 🔧 PARSERY
-    # ========================
-
     def _parse_ue_id(self, ue_id):
         if isinstance(ue_id, str) and ue_id.startswith("UE-"):
             return int(ue_id.split("-")[1])
@@ -19,10 +15,6 @@ class EpcLibrary:
         if isinstance(bearer_id, str) and bearer_id.startswith("Bearer-"):
             return int(bearer_id.split("-")[1])
         return int(bearer_id)
-
-    # ========================
-    # 📡 UE OPERATIONS
-    # ========================
 
     def api_list_attached_ues(self):
         url = f"{self.base_url}/ues"
@@ -66,10 +58,6 @@ class EpcLibrary:
         requests.post(f"{self.base_url}/reset")
         logger.warn("Symulator został zresetowany do ustawień fabrycznych!")
 
-    # ========================
-    # 📦 BEARERS
-    # ========================
-
     def api_add_dedicated_bearer_channel_to_ue(self, ue_id, bearer_id):
         ue_id = self._parse_ue_id(ue_id)
         bearer_id = self._parse_bearer_id(bearer_id)
@@ -111,10 +99,6 @@ class EpcLibrary:
 
         logger.info(f"Pobrano dane dla UE {ue_id}.")
         return response
-
-    # ========================
-    # 🚀 TRAFFIC
-    # ========================
 
     def api_start_data_transfer(self, ue_id, bearer_id, speed):
         ue_id = self._parse_ue_id(ue_id)
