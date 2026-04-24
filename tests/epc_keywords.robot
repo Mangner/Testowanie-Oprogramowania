@@ -100,3 +100,43 @@ Verify Reported Throughput Is Within ${tolerance_percent} Percent Of Target On U
 Get Traffic Stats For UE-${ue_id} Bearer-${bearer_id}
     ${stats}=    Api Get Transfer Info    ${ue_id}    bearer_id=${bearer_id}
     RETURN    ${stats}
+
+Get Transfer Info For UE And Bearer
+    [Documentation]    Retrieves transfer info for a UE and bearer.
+    [Arguments]    ${ue_id}    ${bearer_id}
+    ${transfer_info}=    Api Get Transfer Info    ${ue_id}    bearer_id=${bearer_id}
+    RETURN    ${transfer_info}
+
+Verify Transfer Info Request Throws Error For UE And Bearer
+    [Documentation]    Verifies that getting transfer info for non-existent bearer throws error.
+    [Arguments]    ${ue_id}    ${bearer_id}
+    Run Keyword And Expect Error    *    Get Transfer Info For UE And Bearer    ${ue_id}    ${bearer_id}
+
+Verify Transfer BPS Is Zero For UE And Bearer
+    [Documentation]    Verifies that both TX and RX BPS are zero after transfer is stopped.
+    [Arguments]    ${ue_id}    ${bearer_id}
+    ${traffic}=    Get Transfer Info For UE And Bearer    ${ue_id}    ${bearer_id}
+    Log    Traffic stats: ${traffic}
+    ${tx_bps}=    Get From Dictionary    ${traffic}    tx_bps
+    ${rx_bps}=    Get From Dictionary    ${traffic}    rx_bps
+    Should Be Equal As Integers    ${tx_bps}    0    msg=Expected tx_bps=0 after stop, got ${tx_bps}
+    Should Be Equal As Integers    ${rx_bps}    0    msg=Expected rx_bps=0 after stop, got ${rx_bps}
+
+
+Attached UE List Should Contain UE-${ue_id}
+    [Documentation]    Pobiera listę i sprawdza, czy dany UE na niej jest.
+    ${ue_list}=    Get Attached UE List
+    ${ue_id_int}=    Convert To Integer    ${ue_id}
+    List Should Contain Value    ${ue_list}    ${ue_id_int}
+
+Attached UE List Should Not Contain UE-${ue_id}
+    [Documentation]    Pobiera listę i sprawdza, czy danego UE na niej NIE MA.
+    ${ue_list}=    Get Attached UE List
+    ${ue_id_int}=    Convert To Integer    ${ue_id}
+    List Should Not Contain Value    ${ue_list}    ${ue_id_int}
+
+
+Global Bearer Count Should Be Greater Than Zero
+    [Documentation]    Pobiera statystyki globalne i sprawdza licznik bearerów.
+    ${stats}=    Get UE Stats
+    Should Be True    ${stats['bearer_count']} > 0
