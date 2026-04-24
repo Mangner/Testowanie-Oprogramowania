@@ -96,3 +96,7 @@ Verify Reported Throughput Is Within ${tolerance_percent} Percent Of Target On U
     ${max_allowed_bps}=    Evaluate    int(${transfer_info}[target_bps] * (1 + ${tolerance_percent} / 100))
     Should Be True    ${transfer_info}[tx_bps] <= ${max_allowed_bps}
     Should Be True    ${transfer_info}[rx_bps] <= ${max_allowed_bps}
+
+Get Traffic Stats For UE-${ue_id} Bearer-${bearer_id}
+    ${stats}=    Api Get Transfer Info    ${ue_id}    bearer_id=${bearer_id}
+    RETURN    ${stats}
